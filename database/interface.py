@@ -43,7 +43,7 @@ def read_artworks(cols = "artist_id, title, medium, price", convert_ids = True):
     con = sqlite3.connect(DATABASE_PATH)
     cur = con.cursor()
     cur.execute(f"SELECT {cols} FROM artworks")
-    artworks = cur.fetchall()
+    artworks = [list(tup) for tup in cur.fetchall()]
     if convert_ids:
         # find the index of the artist_id column
         artist_id_index = [col.strip() for col in cols.split(",")].index("artist_id")
