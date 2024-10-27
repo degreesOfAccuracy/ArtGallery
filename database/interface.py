@@ -1,6 +1,14 @@
 import sqlite3
 
-DATABASE_PATH = "database.db"
+DATABASE_PATH = "database/database.db"
+
+def execute_script(script_path):
+    with open(script_path) as script_file:
+        script = script_file.read()
+    con = sqlite3.connect(DATABASE_PATH)
+    cur = con.cursor()
+    cur.executescript(script)
+    con.commit()
 
 def write_artist(artist_name: str, street: str, town: str, county: str, postcode: str):
     con = sqlite3.connect(DATABASE_PATH)

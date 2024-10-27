@@ -1,5 +1,5 @@
 import tkinter as tk
-import database as db
+import database.interface as db
 
 # start a tkinter window
 root = tk.Tk()
@@ -15,6 +15,3 @@ title = tk.Label(root, text = "ArtDB", font = ("Calibri", 24), justify = "center
 title.grid(row = 0, column = 0, sticky = "NSEW", columnspan = 20)
 
 root.mainloop()
-
-db.write_artist("Martin Leighton", "5 Park Place", "Peterborough", "Cambridgeshire", "PE32 5LP")
-db.write_artwork(1, "African Giant", "Oil", 800)
