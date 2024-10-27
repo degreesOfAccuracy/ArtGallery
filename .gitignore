@@ -1,6 +1,9 @@
 # MacOS's idea of useful
 **/.DS_Store
 
+# My test file
+test.py
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
