@@ -89,5 +89,5 @@ class Table():
         if self.scrolled_rows < len(self.rows) - self.height + 1 - amount:
             self.scrolled_rows += amount
         else:
-            self.scrolled_rows = len(self.rows) - self.height + 1
+            self.scrolled_rows = max(len(self.rows) - self.height + 1, 0) # make sure scrolled_rows isn't negative
         self.draw_content()
