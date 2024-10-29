@@ -38,16 +38,19 @@ def write_artwork(artist_id: int, title: str, medium: str, price: float):
     )
     con.commit()
 
-def read_artworks(cols = "artist_id, title, medium, price"):
+def read_artworks(cols = "artist_id, title, medium, price", add_names = True, names_index = 1):
     "Reads the specified columns from all the rows in the artworks table"
     con = sqlite3.connect(DATABASE_PATH)
     cur = con.cursor()
     cur.execute(f"SELECT {cols} FROM artworks")
     artworks = [list(tup) for tup in cur.fetchall()]
-    # get the artist names, then add them ids to the row at index 1
-    cur.execute("SELECT id, artist_name FROM artists")
-    artist_names = dict(cur.fetchall())
-    for i in range(len(artworks)):
-        artist_id = artworks[i][0]
-        artworks[i] = [artworks[i][0]] + [artist_names[artist_id]] + artworks[i][1:]
+    if add_names:
+        # query for the artist names
+        cur.execute("SELECT id, artist_name FROM artists")
+        artist_names = dict(cur.fetchall())
+        # locate index of artist ids
+        id_index = [col.strip() for col in cols.split(",")].index("artist_id")
+        for i in range(len(artworks)):
+            artist_id = artworks[i][id_index]
+            artworks[i] = artworks[i][:names_index] + [artist_names[artist_id]] + artworks[i][names_index:]
     return artworks
