@@ -21,7 +21,7 @@ def write_artist(artist_name: str, street: str, town: str, county: str, postcode
     )
     con.commit()
 
-def read_artists(cols = "artist_name, street, town, county, postcode"):
+def read_artists(cols = "id, artist_name, street, town, county, postcode"):
     "Reads the specified columns from all the rows in the artists table"
     con = sqlite3.connect(DATABASE_PATH)
     cur = con.cursor()
@@ -38,19 +38,16 @@ def write_artwork(artist_id: int, title: str, medium: str, price: float):
     )
     con.commit()
 
-def read_artworks(cols = "artist_id, title, medium, price", convert_ids = True):
+def read_artworks(cols = "artist_id, title, medium, price"):
     "Reads the specified columns from all the rows in the artworks table"
     con = sqlite3.connect(DATABASE_PATH)
     cur = con.cursor()
     cur.execute(f"SELECT {cols} FROM artworks")
     artworks = [list(tup) for tup in cur.fetchall()]
-    if convert_ids:
-        # find the index of the artist_id column
-        artist_id_index = [col.strip() for col in cols.split(",")].index("artist_id")
-        # get the artist names, then replace the ids with the names
-        cur.execute("SELECT id, artist_name FROM artists")
-        artist_names = dict(cur.fetchall())
-        for i in range(len(artworks)):
-            artist_id = artworks[i][artist_id_index]
-            artworks[i][artist_id_index] = artist_names[artist_id]
+    # get the artist names, then add them ids to the row at index 1
+    cur.execute("SELECT id, artist_name FROM artists")
+    artist_names = dict(cur.fetchall())
+    for i in range(len(artworks)):
+        artist_id = artworks[i][0]
+        artworks[i] = [artworks[i][0]] + [artist_names[artist_id]] + artworks[i][1:]
     return artworks
